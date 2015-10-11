@@ -44,10 +44,11 @@ var createRegister = function *(body) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query("INSERT INTO registers(register, date, label) VALUES($1, $2, $3) RETURNING id", [body.register, body.date, body.label], function(err, result) {
+                console.log(result);
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(result[0].id);
+                    resolve(result && result.rows[0].id);
                 }
                 done();
             });
