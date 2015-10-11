@@ -78,4 +78,4 @@ router.get('/registers/:register_id', function *() {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen('3000');
+app.listen(process.env.PORT || '8080');
