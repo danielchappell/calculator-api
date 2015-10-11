@@ -23,7 +23,12 @@ var allRegisters = function *() {
     return new  Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('SELECT * FROM registers', function(err, result) {
-                resolve(result && result.rows);
+                var response = {"registers": result &&result.rows};
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(response);
+                }
                 done();
             });
         });
@@ -34,7 +39,12 @@ var getRegister = function *(id) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('SELECT row FROM registers WHERE id=$1', [id], function(error, result) {
-                resolve(result && result.rows[0]);
+                var response = {"register": result && result.rows[0]};
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(response);
+                }
                 done();
             });
         });
