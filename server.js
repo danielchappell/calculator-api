@@ -39,6 +39,7 @@ var getRegister = function *(id) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('SELECT row FROM registers WHERE id=$1', [id], function(error, result) {
+                console.log(error, result);
                 var response = {"register": result && result.rows[0]};
                 if (err) {
                     reject(err);
@@ -86,8 +87,9 @@ router.post('/registers', koaBody, function *() {
     };
 });
 
-router.get('/registers/:register_id', function *() {
-    this.body = yield getRegister(this.params.register_id);
+router.get('/registers/:id', function *() {
+    console.log(this.params);
+    this.body = yield getRegister(this.params.id);
     this.status = 200;
 });
 app.use(cors({origin: "*"}));
