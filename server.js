@@ -38,7 +38,7 @@ var allRegisters = function *() {
 var getRegister = function *(id) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-            client.query('SELECT row FROM registers WHERE id=$1', [id], function(error, result) {
+            client.query('SELECT * FROM registers WHERE id=$1', [id], function(error, result) {
                 console.log(error, result);
                 var response = {"register": result && result.rows[0]};
                 if (err) {
