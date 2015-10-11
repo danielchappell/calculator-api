@@ -51,10 +51,10 @@ var getRegister = function *(id) {
     });
 };
 
-var createRegister = function *(body) {
+var createRegister = function *(register) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-            client.query("INSERT INTO registers(register, date, label) VALUES($1, $2, $3) RETURNING id", [body.register, body.date, body.label], function(err, result) {
+            client.query("INSERT INTO registers(register, date, label) VALUES($1, $2, $3) RETURNING id", [register.register, register.date, register.label], function(err, result) {
                 if (err) {
                     reject(err);
                 } else {
@@ -72,13 +72,18 @@ router.get('/registers', function *() {
 });
 
 router.post('/registers', koaBody, function *() {
-    var id = yield createRegister(this.request.body);
+    var register = this.request.body.register;
+    var id = yield createRegister(register);
     var requestBody = this.request.body;
     this.status = 201;
-    this.body = {id: id,
-                 register: requestBody.register,
-                 date: requestBody.date,
-                 label: requestBody.label};
+    this.body = {
+        register: {
+            id: id,
+            register: register.register,
+            date: register.date,
+            label: register.label
+        }
+    };
 });
 
 router.get('/registers/:register_id', function *() {
