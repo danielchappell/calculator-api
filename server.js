@@ -21,8 +21,8 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 var allRegisters = function *() {
     return new  Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-            client.query('SELECT * FROM registers', function(err, rows) {
-                resolve(rows);
+            client.query('SELECT * FROM registers', function(err, result) {
+                resolve(result && result.rows);
                 done();
             });
         });
@@ -32,8 +32,8 @@ var allRegisters = function *() {
 var getRegister = function *(id) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-            client.query('SELECT row FROM registers WHERE id=$1', [id], function(error, row) {
-                resolve(row);
+            client.query('SELECT row FROM registers WHERE id=$1', [id], function(error, result) {
+                resolve(result && result.rows[0]);
                 done();
             });
         });
@@ -44,11 +44,10 @@ var createRegister = function *(body) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query("INSERT INTO registers(register, date, label) VALUES($1, $2, $3) RETURNING id", [body.register, body.date, body.label], function(err, result) {
-                console.log(result);
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(result && result.rows[0].id);
+                    resolve(result && result.rows[0] && result.rows[0].id);
                 }
                 done();
             });
