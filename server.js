@@ -12,7 +12,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
         throw err;
     }
 
-    client.query('CREATE TABLE IF NOT EXISTS registers(id INTEGER PRIMARY KEY, register VARCHAR(1000), date VARCHAR(50), label VARCHAR(30))', function(err) {
+    client.query('CREATE TABLE IF NOT EXISTS registers(id SERIAL PRIMARY KEY, register VARCHAR(1000), date VARCHAR(50), label VARCHAR(30))', function(err) {
         console.log(err);
         done();
     });
