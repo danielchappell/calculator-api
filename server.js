@@ -5,6 +5,7 @@
 var app = require('koa')();
 var router = require('koa-router')({prefix: '/api/v1'});
 var koaBody = require('koa-body')();
+var cors = require('koa-cors');
 var pg = require('pg');
 
 pg.connect(process.env.DATABASE_URL, function(err, client, done) {
@@ -74,7 +75,7 @@ router.get('/registers/:register_id', function *() {
     this.body = yield getRegister(this.params.register_id);
     this.status = 200;
 });
-
+app.use(cors({origin: "*"}));
 app.use(router.routes());
 app.use(router.allowedMethods());
 
