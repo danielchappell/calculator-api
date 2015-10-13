@@ -152,7 +152,8 @@ publicRouter.post('/login', koaBody, function* (next) {
         if (err) {
             throw err;
         }
-
+        console.log("context", ctx);
+        console.log(err, user, info);
         if (user === false) {
             ctx.status = 401;
             ctx.body = {success: false};
@@ -160,7 +161,7 @@ publicRouter.post('/login', koaBody, function* (next) {
             yield ctx.login(user);
             this.status = 200;
         }
-    }).call(this, next);
+    });
 });
 
 authenticatedRouter.get('/registers', function* () {
