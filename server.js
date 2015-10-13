@@ -5,9 +5,9 @@
 var app = require('koa')();
 var Router = require('koa-router');
 var koaBody = require('koa-body')();
-var redisStore = require('koa-redis')();
+var PgStore  = require('koa-pg-session');
 var session = require('koa-generic-session');
-app.use(session({store: redisStore}));
+app.use(session({store: new PgStore(process.env.DATABASE_URL)}));
 app.keys = ['ember-calc'];
 
 var passport = require('koa-passport');
