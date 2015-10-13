@@ -152,15 +152,17 @@ publicRouter.post('/login', koaBody, function* (next) {
         if (err) {
             throw err;
         }
+
         console.log("context", ctx);
         console.log(ctx.response.status);
         console.log(user);
+
         if (user === false) {
             ctx.response.status = 401;
             ctx.response.body = {success: false};
         } else {
             yield ctx.login(user);
-            this.response.status = 200;
+            ctx.response.status = 200;
         }
     });
 });
