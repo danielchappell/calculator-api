@@ -5,8 +5,9 @@
 var app = require('koa')();
 var Router = require('koa-router');
 var koaBody = require('koa-body')();
+var redisStore = require('koa-redis')({db: process.env.REDIS_URL});
 var session = require('koa-generic-session');
-app.use(session());
+app.use(session({store: redisStore}));
 app.keys = ['ember-calc'];
 
 var passport = require('koa-passport');
@@ -56,9 +57,6 @@ var createUser = function* (username, password) {
                 if (err) {
                     reject(err);
                 } else {
-                    console.log(result);
-                    console.log(result.rows);
-                    console.log(result.rows[0].id);
                     resolve(result.rows[0] && result.rows[0].id);
                 }
                 done();
@@ -145,7 +143,6 @@ var authenticatedRouter = new Router({prefix: '/api/v1'});
 publicRouter.post('/users', koaBody, function* () {
     var user = this.request.body.user;
     var userId = yield createUser(user.username, user.password);
-    console.log(userId);
     this.status = 201;
     yield this.login(userId);
 });
