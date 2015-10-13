@@ -162,7 +162,7 @@ publicRouter.post('/login', koaBody, function* (next) {
             yield ctx.login(user);
             this.response.status = 200;
         }
-    };
+    });
 });
 
 authenticatedRouter.get('/registers', function* () {
