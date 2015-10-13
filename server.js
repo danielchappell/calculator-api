@@ -10,7 +10,7 @@ app.use(session());
 app.keys = ['ember-calc'];
 
 var passport = require('koa-passport');
-
+var LocalStrategy = require('passport-local').Strategy;
 var cors = require('koa-cors');
 app.use(cors({origin: "*"}));
 
@@ -201,7 +201,7 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-passport.use((new require('passport-local').Strategy)(function(username, password, done) {
+passport.use(new LocalStrategy(function(username, password, done) {
     loginUser(username, password).then(function(userId) {
         done(null, userId);
     });
