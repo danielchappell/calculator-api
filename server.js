@@ -146,7 +146,7 @@ publicRouter.post('/users', koaBody, function* () {
     yield this.login(userId);
 });
 
-publicRouter.post('/login', koaBody, function* () {
+publicRouter.post('/login', koaBody, function* (next) {
     var ctx = this;
     yield passport.authenticate('local', function* (err, user, info) {
         if (err) {
@@ -160,7 +160,7 @@ publicRouter.post('/login', koaBody, function* () {
             yield ctx.login(user);
             this.status = 200;
         }
-    }).call(this);
+    }).call(this, next);
 });
 
 authenticatedRouter.get('/registers', function* () {
