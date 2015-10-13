@@ -56,6 +56,8 @@ var createUser = function* (username, password) {
                 if (err) {
                     reject(err);
                 } else {
+                    console.log(result);
+                    console.log(result.rows);
                     resolve(result.rows[0] && result.rows[0].id);
                 }
                 done();
@@ -153,16 +155,12 @@ publicRouter.post('/login', koaBody, function* (next) {
             throw err;
         }
 
-        console.log("context", ctx);
-        console.log(ctx.response.status);
-        console.log(user);
-
         if (user === false) {
-            ctx.response.status = 401;
-            ctx.response.body = {success: false};
+            ctx.status = 401;
+            ctx.body = {success: false};
         } else {
             yield ctx.login(user);
-            ctx.response.status = 200;
+            ctx.status = 200;
         }
     });
 });
