@@ -64,7 +64,7 @@ var createUser = function* (username, password) {
     });
 };
 
-var loginUser = function* (username, password) {
+var loginUser = function (username, password) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('SELECT password, id FROM users WHERE username=$1', [username], function(err, result) {
