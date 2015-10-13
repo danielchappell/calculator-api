@@ -144,6 +144,8 @@ publicRouter.post('/users', koaBody, function* () {
     var user = this.request.body.user;
     var userId = yield createUser(user.username, user.password);
     this.status = 201;
+    user.id = userId;
+    this.body = {"user": user};
     yield this.login(userId);
 });
 
