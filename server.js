@@ -10,10 +10,6 @@ app.use(session());
 app.keys = ['ember-calc'];
 
 var passport = require('koa-passport');
-app.use(passport.initialize());
-app.use(passport.session());
-
-
 
 var cors = require('koa-cors');
 app.use(cors({origin: "*"}));
@@ -210,6 +206,10 @@ passport.use((new require('passport-local').Strategy)(function(username, passwor
         done(null, userId);
     });
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use(publicRouter.routes());
 app.use(publicRouter.allowedMethods());
