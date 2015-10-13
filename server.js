@@ -5,7 +5,7 @@
 var app = require('koa')();
 var Router = require('koa-router');
 var koaBody = require('koa-body')();
-var redisStore = require('koa-redis')({db: process.env.REDIS_URL});
+var redisStore = require('koa-redis')({host: process.env.REDIS_URL});
 var session = require('koa-generic-session');
 app.use(session({store: redisStore}));
 app.keys = ['ember-calc'];
