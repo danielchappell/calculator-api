@@ -58,6 +58,7 @@ var createUser = function* (username, password) {
                 } else {
                     console.log(result);
                     console.log(result.rows);
+                    console.log(result.rows[0].id);
                     resolve(result.rows[0] && result.rows[0].id);
                 }
                 done();
@@ -144,6 +145,7 @@ var authenticatedRouter = new Router({prefix: '/api/v1'});
 publicRouter.post('/users', koaBody, function* () {
     var user = this.request.body.user;
     var userId = yield createUser(user.username, user.password);
+    console.log(userId);
     this.status = 201;
     yield this.login(userId);
 });
