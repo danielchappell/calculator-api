@@ -11,7 +11,6 @@ app.use(session({store: new PgStore(process.env.DATABASE_URL),
                  cookie: {
                      domain: "ember-calc.herokuapp.com",
                      httpOnly: true,
-                     maxage: null,
                      rewrite: true,
                      signed: true
                  }}));
@@ -77,7 +76,7 @@ var loginUser = function (username, password) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('SELECT password, id FROM users WHERE username=$1', [username], function(err, result) {
-                if(err) {
+                if(err || !result.rows[0]) {
                     reject(err);
                 } else {
                     resolve(password, result.rows[0].password, result.rows[0].id);
