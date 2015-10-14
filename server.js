@@ -10,7 +10,7 @@ var session = require('koa-generic-session');
 app.use(session({store: new PgStore(process.env.DATABASE_URL),
                  cookie: {
                      domain: "ember-calc.herokuapp.com",
-                     httpOnly: true,
+                     httpOnly: false,
                      rewrite: true,
                      signed: true
                  }}));
