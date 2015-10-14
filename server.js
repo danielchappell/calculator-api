@@ -9,9 +9,7 @@ var PgStore  = require('koa-pg-session');
 var session = require('koa-generic-session');
 app.use(session({store: new PgStore(process.env.DATABASE_URL),
                  cookie: {
-                     httpOnly: false,
-                     rewrite: true,
-                     signed: true
+                     httpOnly: false
                  }}));
 
 app.keys = ['ember-calc'];
