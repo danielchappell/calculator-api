@@ -7,7 +7,15 @@ var Router = require('koa-router');
 var koaBody = require('koa-body')();
 var PgStore  = require('koa-pg-session');
 var session = require('koa-generic-session');
-app.use(session({store: new PgStore(process.env.DATABASE_URL)}));
+app.use(session({store: new PgStore(process.env.DATABASE_URL),
+                 cookie: {
+                     domain: "ember-calc.herokuapp.com",
+                     httpOnly: true,
+                     maxage: null,
+                     rewrite: true,
+                     signed: true
+                 }}));
+
 app.keys = ['ember-calc'];
 
 var passport = require('koa-passport');
