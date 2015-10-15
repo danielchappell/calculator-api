@@ -65,8 +65,7 @@ var createUser = function* (username, password) {
                     reject(err);
                 } else {
                     resolve(result.rows[0] && result.rows[0].id);
-                    console.log(result.rows[0] && result.rows[0].id);
-                    console.log(result.rows[0].id);
+
                 }
                 done();
             });
@@ -82,6 +81,8 @@ var loginUser = function (username, password) {
                 if(err || !result.rows[0]) {
                     reject(err);
                 } else {
+                    console.log(result.rows[0] && result.rows[0].id);
+                    console.log(result.rows[0].id);
                     resolve(password, result.rows[0].password, result.rows[0].id);
                 }
                 done();
