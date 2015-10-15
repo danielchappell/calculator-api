@@ -14,7 +14,11 @@ app.keys = ['ember-calc'];
 var passport = require('koa-passport');
 var LocalStrategy = require('passport-local').Strategy;
 var cors = require('koa-cors');
-app.use(cors({origin: true, credentials: true}));
+app.use(cors({
+    origin: function(req) {
+        var requestOrigin = req.header('Origin');
+        return /localhost/.test(requestOrigin) ? "localhost:4200" : "ember-calc-demo.herokuapp.com";
+    }, credentials: true}));
 
 
 var bcrypt = require('bcrypt');
