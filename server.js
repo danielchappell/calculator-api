@@ -16,8 +16,11 @@ var LocalStrategy = require('passport-local').Strategy;
 var cors = require('koa-cors');
 app.use(cors({
     origin: function(req) {
+        console.log(req.header.origin);
         var requestOrigin = req.header.origin;
-        return /localhost/.test(requestOrigin) ? "http://localhost:4200" : "https://ember-calc-demo.herokuapp.com";
+        var isLocalHost = /localhost/.test(requestOrigin);
+        console.log(isLocalHost);
+        return isLocalHost ? "http://localhost:4200" : "https://ember-calc-demo.herokuapp.com";
     }, credentials: true}));
 
 
