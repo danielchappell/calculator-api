@@ -51,6 +51,7 @@ var verifyPassword = function* (password, hash, id) {
                 reject(err);
             } else {
                 resolve(didMatch ? id : false);
+                console.log(id);
             }
         });
     });
@@ -214,6 +215,7 @@ passport.deserializeUser(function(user, done) {
 
 passport.use(new LocalStrategy(function(username, password, done) {
     loginUser(username, password).then(function(userId) {
+        console.log(userId);
         done(null, userId);
     });
 }));
