@@ -16,10 +16,8 @@ var LocalStrategy = require('passport-local').Strategy;
 var cors = require('koa-cors');
 app.use(cors({
     origin: function(req) {
-        console.log(req.header.origin);
         var requestOrigin = req.header.origin;
         var isLocalHost = /localhost/.test(requestOrigin);
-        console.log(isLocalHost);
         return isLocalHost ? "http://localhost:4200" : "https://ember-calc-demo.herokuapp.com";
     }, credentials: true}));
 
@@ -78,6 +76,7 @@ var loginUser = function (username, password) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('SELECT password, id FROM users WHERE username=$1', [username], function(err, result) {
+                console.log(err,result);
                 if(err || !result.rows[0]) {
                     reject(err);
                 } else {
