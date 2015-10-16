@@ -44,10 +44,10 @@ var generatePasswordHash = function* (password) {
 
 var verifyPassword = function (password, hash, id) {
     console.log("beep!");
-    console.log(password, hash, id);
+    console.log("verifyFunc",password, hash, id);
     return new Promise(function(resolve, reject) {
         bcrypt.compare(password, hash, function(err, didMatch) {
-            console.log(err, didMatch, id);
+            console.log("bcryptCompare", err, didMatch, id);
             if (err) {
                 reject(err);
             } else {
