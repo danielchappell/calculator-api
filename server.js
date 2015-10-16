@@ -43,6 +43,7 @@ var generatePasswordHash = function* (password) {
 };
 
 var verifyPassword = function* (password, hash, id) {
+    console.log("beep!");
     console.log(password, hash, id);
     return new Promise(function(resolve, reject) {
         bcrypt.compare(password, hash, function(err, didMatch) {
@@ -52,6 +53,7 @@ var verifyPassword = function* (password, hash, id) {
             } else {
                 resolve(didMatch ? id : false);
                 console.log(id);
+                console.log('splat!');
             }
         });
     });
@@ -219,7 +221,7 @@ passport.deserializeUser(function(user, done) {
 
 passport.use(new LocalStrategy(function(username, password, done) {
     loginUser(username, password).then(function(userId) {
-        console.log(userId);
+        console.log("snark", userId);
         done(null, userId);
     });
 }));
