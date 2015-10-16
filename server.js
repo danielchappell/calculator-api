@@ -47,17 +47,12 @@ var verifyPassword = function (userPasswordObj) {
     var hash = userPasswordObj.hash;
     var id = userPasswordObj.id;
 
-    console.log("beep!");
-    console.log("verifyFunc",password, hash, id);
     return new Promise(function(resolve, reject) {
         bcrypt.compare(password, hash, function(err, didMatch) {
-            console.log("bcryptCompare", err, didMatch, id);
             if (err) {
                 reject(err);
             } else {
                 resolve(didMatch ? id : false);
-                console.log(id);
-                console.log('splat!');
             }
         });
     });
@@ -84,12 +79,9 @@ var loginUser = function (username, password) {
     return new Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('SELECT password, id FROM users WHERE username=$1', [username], function(err, result) {
-                console.log(err,result);
                 if(err || !result.rows[0]) {
                     reject(err);
                 } else {
-                    console.log(result.rows[0] && result.rows[0].id);
-                    console.log(result.rows[0].id);
                     resolve({password: password,
                              hash: result.rows[0].password,
                              id: result.rows[0].id});
@@ -226,7 +218,6 @@ passport.deserializeUser(function(user, done) {
 
 passport.use(new LocalStrategy(function(username, password, done) {
     loginUser(username, password).then(function(userId) {
-        console.log("snark", userId);
         done(null, userId);
     });
 }));
