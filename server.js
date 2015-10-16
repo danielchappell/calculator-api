@@ -42,7 +42,11 @@ var generatePasswordHash = function* (password) {
     });
 };
 
-var verifyPassword = function (password, hash, id) {
+var verifyPassword = function (userPasswordObj) {
+    var password = userPasswordObj.password;
+    var hash = userPasswordObj.hash;
+    var id = userPasswordObj.id;
+
     console.log("beep!");
     console.log("verifyFunc",password, hash, id);
     return new Promise(function(resolve, reject) {
@@ -69,7 +73,6 @@ var createUser = function* (username, password) {
                     reject(err);
                 } else {
                     resolve(result.rows[0] && result.rows[0].id);
-
                 }
                 done();
             });
@@ -87,7 +90,9 @@ var loginUser = function (username, password) {
                 } else {
                     console.log(result.rows[0] && result.rows[0].id);
                     console.log(result.rows[0].id);
-                    resolve(password, result.rows[0].password, result.rows[0].id);
+                    resolve({password: password,
+                             hash: result.rows[0].password,
+                             id: result.rows[0].id});
                 }
                 done();
             });
