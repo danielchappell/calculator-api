@@ -42,7 +42,7 @@ var generatePasswordHash = function* (password) {
     });
 };
 
-var verifyPassword = function* (password, hash, id) {
+var verifyPassword = function (password, hash, id) {
     console.log("beep!");
     console.log(password, hash, id);
     return new Promise(function(resolve, reject) {
