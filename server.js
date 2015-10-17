@@ -156,6 +156,14 @@ var createRegister = function* (userId, register) {
 var publicRouter = new Router({prefix: '/api/v1'});
 var authenticatedRouter = new Router({prefix: '/api/v1'});
 
+publicRouter.get('/checkAuth', function* () {
+    if (this.req.isAuthenticated()) {
+        this.status = 200;
+    } else {
+        this.status = 401;
+    }
+});
+
 publicRouter.post('/users', koaBody, function* () {
     var user = this.request.body.user;
     var result  = yield createUser(user.username, user.password);
