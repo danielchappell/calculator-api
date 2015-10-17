@@ -240,7 +240,7 @@ authenticatedRouter.get('/registers/:id', function* () {
 authenticatedRouter.delete('/registers/:id', function* () {
     var result = yield deleteRegister(this.req.user, this.params.id);
     if (result.success) {
-        this.status = 200;
+        this.status = 204;
     } else {
         this.body = {"errors": {"register":[result.message]}};
         this.status = 422;
