@@ -65,15 +65,15 @@ var createUser = function* (username, password) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('INSERT INTO users(username, password) SELECT $1, $2 WHERE NOT EXISTS (SELECT username FROM users WHERE username=$3) RETURNING id',
                          [username, hashedPassword, username], function(err, result) {
-                if (err) {
-                    reject(err);
-                } else if (!result.rows[0]) {
-                    resolve({success: false, message: "username taken"});
-                } else {
-                    resolve({success: true, id: result.rows[0] && result.rows[0].id});
-                }
-                done();
-            });
+                             if (err) {
+                                 reject(err);
+                             } else if (!result.rows[0]) {
+                                 resolve({success: false, message: "username taken"});
+                             } else {
+                                 resolve({success: true, id: result.rows[0] && result.rows[0].id});
+                             }
+                             done();
+                         });
         });
     });
 };
@@ -108,7 +108,7 @@ var allRegisters = function* (userId) {
     return new  Promise(function(resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query('SELECT * FROM registers WHERE userId=$1',[userId], function(err, result) {
-                var response = {"registers": result &&result.rows};
+                var response = {"registers": result && result.rows};
                 if (err) {
                     reject(err);
                 } else {
@@ -141,10 +141,27 @@ var createRegister = function* (userId, register) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
             client.query("INSERT INTO registers(register, date, label, userId) VALUES($1, $2, $3, $4) RETURNING id",
                          [register.register, register.date, register.label, userId], function(err, result) {
+                             if (err) {
+                                 reject(err);
+                             } else {
+                                 resolve(result && result.rows[0] && result.rows[0].id);
+                             }
+                             done();
+                         });
+        });
+    });
+};
+
+var deleteRegister = function* (userId, registerId) {
+    return new Promise (function(resolve, reject) {
+        pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+            client.query('DELETE FROM registers WHERE id=$1 AND userId=$2 RETURNING id', [registerId, userId], function(err, result) {
                 if (err) {
                     reject(err);
+                } else if (!result.rows[0]) {
+                    resolve({success: false, message: "unable to delete record"});
                 } else {
-                    resolve(result && result.rows[0] && result.rows[0].id);
+                    resolve({success: true, id: result.rows[0].id});
                 }
                 done();
             });
@@ -174,7 +191,7 @@ publicRouter.post('/users', koaBody, function* () {
         yield this.login(result.id);
     } else {
         this.status = 422;
-        this.body = {"errors": {"username": ["username taken"]}};
+        this.body = {"errors": {"username": [result.message]}};
     }
 });
 
@@ -218,6 +235,16 @@ authenticatedRouter.post('/registers', koaBody, function* () {
 authenticatedRouter.get('/registers/:id', function* () {
     this.body = yield getRegister(this.req.user, this.params.id);
     this.status = 200;
+});
+
+authenticatedRouter.delete('/registers/:id', function* () {
+    var result = yield deleteRegister(this.req.user, this.params.id);
+    if (result.success) {
+        this.status = 200;
+    } else {
+        this.body = {"errors": {"register":[result.message]}};
+        this.status = 422;
+    }
 });
 
 authenticatedRouter.post('/logout', function* () {
