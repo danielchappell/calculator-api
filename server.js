@@ -247,7 +247,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
         throw err;
     }
 
-    client.query('CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, username VARCHAR(30), password VARCHAR(100))', Function(err) {
+    client.query('CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, username VARCHAR(30), password VARCHAR(100))', function(err) {
         console.log(err);
         done();
     });
