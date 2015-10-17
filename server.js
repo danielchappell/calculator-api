@@ -63,11 +63,13 @@ var createUser = function* (username, password) {
     var hashedPassword = yield generatePasswordHash(password);
     return new Promise(function (resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-            client.query('INSERT INTO users(username, password) VALUES($1, $2) RETURNING id', [username, hashedPassword], function(err, result) {
+            client.query('INSERT INTO users(username, password) VALUES($1, $2) WHERE NOT EXISTS (SELECT username FROM users WHERE username=$1) RETURNING id', [username, hashedPassword], function(err, result) {
                 if (err) {
                     reject(err);
+                } else if (!result.rows[0]) {
+                    resolve({success: false, message: "username taken"});
                 } else {
-                    resolve(result.rows[0] && result.rows[0].id);
+                    resolve({success: true, id: result.rows[0] && result.rows[0].id});
                 }
                 done();
             });
@@ -154,11 +156,16 @@ var authenticatedRouter = new Router({prefix: '/api/v1'});
 
 publicRouter.post('/users', koaBody, function* () {
     var user = this.request.body.user;
-    var userId = yield createUser(user.username, user.password);
-    this.status = 201;
-    user.id = userId;
-    this.body = {"user": user};
-    yield this.login(userId);
+    var result  = yield createUser(user.username, user.password);
+    if (result.success) {
+        this.status = 201;
+        user.id = result.id;
+        this.body = {"user": user};
+        yield this.login(result.id);
+    } else {
+        this.status = 500;
+        this.body = result;
+    }
 });
 
 publicRouter.post('/login', koaBody, function* (next) {
