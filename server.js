@@ -247,12 +247,12 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
         throw err;
     }
 
-    client.query('CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, username VARCHAR(30), password VARCHAR(100))', Function(err) {
+    client.query('CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, username VARCHAR(30), password VARCHAR(100))', function(err) {
         console.log(err);
         done();
     });
 
-    client.query('CREATE TABLE IF NOT EXISTS registers(id SERIAL PRIMARY KEY, register VARCHAR(1000), date VARCHAR(50), label VARCHAR(30), userId INTEGER REFERENCES users (id))', Function(err) {
+    client.query('CREATE TABLE IF NOT EXISTS registers(id SERIAL PRIMARY KEY, register VARCHAR(1000), date VARCHAR(50), label VARCHAR(30), userId INTEGER REFERENCES users (id))', function(err) {
         console.log(err);
         done();
     });
