@@ -63,8 +63,8 @@ var createUser = function* (username, password) {
     var hashedPassword = yield generatePasswordHash(password);
     return new Promise(function (resolve, reject) {
         pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-            client.query('INSERT INTO users(username, password) VALUES($1, $2) RETURNING id WHERE NOT EXISTS (SELECT username FROM users WHERE username=$1)',
-                         [username, hashedPassword], function(err, result) {
+            client.query('INSERT INTO users(username, password) VALUES($1, $2) RETURNING id WHERE NOT EXISTS (SELECT username FROM users WHERE username=$3)',
+                         [username, hashedPassword, username], function(err, result) {
                 if (err) {
                     reject(err);
                 } else if (!result.rows[0]) {
