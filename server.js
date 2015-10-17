@@ -166,7 +166,7 @@ publicRouter.post('/users', koaBody, function* () {
         yield this.login(result.id);
     } else {
         this.status = 500;
-        this.body = result;
+        this.body = {"errors": {"username": ["username taken"]}};
     }
 });
 
